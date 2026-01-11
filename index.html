@@ -283,7 +283,7 @@
 
     <section class="section" style="margin-top:34px;">
       <div class="sectionHead">
-        <div></div><div class="label">RETAIL</div>
+        <div class="label">RETAIL</div><div></div>
       </div>
       <div class="row" id="retail"></div>
     </section>
@@ -294,53 +294,72 @@
       </div>
       <div class="row" id="trends"></div>
     </section>
+
+    <section class="section" style="margin-top:34px;"> 
+  <div class="sectionHead">
+    <div class="label">BOOK PROMOTION</div><div></div>
+  </div>
+  <div class="row" id="book"></div>
+</section>
+
   </main>
 
   <script>
-    const DATA = {
-      events: [
-        { title:"Elite Model Look 2024", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6Lic5_rFds/", thumb:"thumbs/events-01.jpg" },
-        { title:"FASHION ROOM BY MIKLOSKO", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C3vjpRvLC3m/", thumb:"thumbs/events-02.jpg" },
-        { title:"FASHION SWAP event", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6BFYqGryiB/", thumb:"thumbs/events-03.jpg" },
-        { title:"Virtual Fashion event", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/CxxQ7lkKvxo/", thumb:"thumbs/events-04.jpg" },
-        { title:"Opening event", client:"Bombay Express", url:"https://www.instagram.com/bombayexpress_sk/reel/C5QjYWOKAh9/", thumb:"thumbs/events-05.jpg" }
-      ],
-      retail: [
-        { title:"Lindex", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4ALFHiKLYY/", thumb:"thumbs/retail-01.jpg" },
-        { title:"Winter perfumes", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/DDZwT6RSyKf/", thumb:"thumbs/retail-02.jpg" },
-        { title:"Karl Lagerfeld", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4tKHymLKbz/", thumb:"thumbs/retail-03.jpg" },
-        { title:"Look into the kitchen", client:"Bombay Express", url:"https://www.instagram.com/bombayexpress_sk/reel/DKuK-IuKecQ/", thumb:"thumbs/retail-04.jpg" },
-        { title:"New dm drogerie", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6WZKF7qYfv/", thumb:"thumbs/retail-05.jpg" }
-      ],
-      trends: [
-        { title:"Christmas loop", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/DDDAcFtugYK/", thumb:"thumbs/trends-01.jpg" },
-        { title:"Après-ski", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/Cz0lO4qqAez/", thumb:"thumbs/trends-02.jpg" },
-        { title:"Autumn is calling", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/CwzvzQhqVeW/", thumb:"thumbs/trends-03.jpg" },
-        { title:"Gift giving", client:"Bombay Express", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4hmHfAK4YG/", thumb:"thumbs/trends-04.jpg" },
-        { title:"Expectations vs. reality", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C8ucw5iK5lg/", thumb:"thumbs/trends-05.jpg" }
-      ]
-    };
+  const DATA = {
+    events: [
+      { title:"Elite Model Look 2024", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6Lic5_rFds/", thumb:"thumbs/events-01.jpg" },
+      { title:"FASHION ROOM BY MIKLOSKO", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C3vjpRvLC3m/", thumb:"thumbs/events-02.jpg" },
+      { title:"FASHION SWAP event", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6BFYqGryiB/", thumb:"thumbs/events-03.jpg" },
+      { title:"Virtual Fashion event", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/CxxQ7lkKvxo/", thumb:"thumbs/events-04.jpg" },
+      { title:"Opening event", client:"Bombay Express", url:"https://www.instagram.com/bombayexpress_sk/reel/C5QjYWOKAh9/", thumb:"thumbs/events-05.jpg" }
+    ],
 
-    function tileHTML(it){
-      return `
-        <a class="reel" href="${it.url}" target="_blank" rel="noopener" aria-label="${it.title} — ${it.client}">
-          <div class="card">
-            <img src="${it.thumb}" alt="${it.title}" loading="lazy" />
-            <div class="overlay">
-              <div class="openTag">OPEN</div>
-              <div class="meta">
-                <p class="t">${it.title}</p>
-                <p class="c">Client: ${it.client}</p>
-              </div>
+    retail: [
+      { title:"Lindex", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4ALFHiKLYY/", thumb:"thumbs/retail-01.jpg" },
+      { title:"Winter perfumes", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/DDZwT6RSyKf/", thumb:"thumbs/retail-02.jpg" },
+      { title:"Karl Lagerfeld", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4tKHymLKbz/", thumb:"thumbs/retail-03.jpg" },
+      { title:"Look into the kitchen", client:"Bombay Express", url:"https://www.instagram.com/bombayexpress_sk/reel/DKuK-IuKecQ/", thumb:"thumbs/retail-04.jpg" },
+      { title:"New dm drogerie", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C6WZKF7qYfv/", thumb:"thumbs/retail-05.jpg" }
+    ],
+
+    trends: [
+      { title:"Après-ski", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/Cz0lO4qqAez/", thumb:"thumbs/trends-01.jpg" },
+      { title:"Christmas loop", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/DDDAcFtugYK/", thumb:"thumbs/trends-02.jpg" },
+      { title:"Autumn is calling", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/CwzvzQhqVeW/", thumb:"thumbs/trends-03.jpg" },
+      { title:"Gift giving", client:"Bombay Express", url:"https://www.instagram.com/auparkshoppingcenter/reel/C4hmHfAK4YG/", thumb:"thumbs/trends-04.jpg" },
+      { title:"Expectations vs. reality", client:"Aupark Shopping Center", url:"https://www.instagram.com/auparkshoppingcenter/reel/C8ucw5iK5lg/", thumb:"thumbs/trends-05.jpg" }
+    ],
+
+    book: [
+      { title:"Reels from my social media", client:"", url:"https://www.instagram.com/nina_protusova/reel/DCCXQjyg3H5/", thumb:"thumbs/book-01.jpg" },
+      { title:"Reels from my social media", client:"", url:"https://www.instagram.com/nina_protusova/reel/DFvYIGAAdHd/", thumb:"thumbs/book-02.jpg" },
+      { title:"Reels from my social media", client:"", url:"https://www.instagram.com/nina_protusova/reel/DGvQPpyIlwv/", thumb:"thumbs/book-03.jpg" },
+      { title:"Reels from my social media", client:"", url:"https://www.instagram.com/nina_protusova/reel/DDC_CouAl8w/", thumb:"thumbs/book-04.jpg" },
+      { title:"Reels from my social media", client:"", url:"https://www.instagram.com/nina_protusova/reel/DFDeBxaAjEh/", thumb:"thumbs/book-05.jpg" }
+    ]
+  };
+
+  function tileHTML(it){
+    const clientLine = it.client ? `<p class="c">Client: ${it.client}</p>` : ``;
+
+    return `
+      <a class="reel" href="${it.url}" target="_blank" rel="noopener" aria-label="${it.title}${it.client ? " — " + it.client : ""}">
+        <div class="card">
+          <img src="${it.thumb}" alt="${it.title}" loading="lazy" />
+          <div class="overlay">
+            <div class="openTag">OPEN</div>
+            <div class="meta">
+              <p class="t">${it.title}</p>
+              ${clientLine}
             </div>
           </div>
-        </a>
-      `;
-    }
+        </div>
+      </a>
+    `;
+  }
 
-    document.getElementById("events").innerHTML = DATA.events.map(tileHTML).join("");
-    document.getElementById("retail").innerHTML = DATA.retail.map(tileHTML).join("");
-    document.getElementById("trends").innerHTML = DATA.trends.map(tileHTML).join("");
-  </script>
-</body>
-</html>
+  document.getElementById("events").innerHTML = DATA.events.map(tileHTML).join("");
+  document.getElementById("retail").innerHTML = DATA.retail.map(tileHTML).join("");
+  document.getElementById("trends").innerHTML = DATA.trends.map(tileHTML).join("");
+  document.getElementById("book").innerHTML  = DATA.book.map(tileHTML).join("");
+</script>
