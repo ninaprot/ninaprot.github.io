@@ -257,6 +257,126 @@
     @media (prefers-reduced-motion: reduce){
       *{ transition:none !important; }
     }
+
+    /* ===== MOBILE: 4 horizontal looping rows (one per gallery) ===== */
+@media (max-width: 720px){
+
+  /* keep your page as-is, only change galleries */
+  .row{
+    display: flex !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 10px;
+    padding: 8px 2px;
+    border: none;                 /* cleaner on mobile */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;        /* Firefox */
+  }
+  .row::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+
+  /* each tile width ensures 2 visible */
+  .reel{
+    flex: 0 0 auto;
+    width: clamp(160px, 46vw, 220px); /* <= at least 2 visible */
+    scroll-snap-align: start;
+  }
+
+  /* remove desktop separators + hover shadow */
+  .reel:not(:nth-child(5n)){ border-right: none !important; }
+  .reel::before{ display:none !important; }
+
+  /* disable hover scale on mobile */
+  .reel:hover .card{ transform: none !important; }
+  .reel:hover img{ transform: none !important; }
+
+  /* keep overlay visible all the time (hover-mode always on) */
+  .overlay{
+    opacity: 1 !important;
+    padding: 8px !important;
+    gap: 6px !important;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.92) 100%) !important;
+  }
+
+  /* make overlay text smaller */
+  .openTag{
+    padding: 6px 7px !important;
+    font-size: 9px !important;
+    letter-spacing: .14em !important;
+  }
+  .meta .t{
+    font-size: 12px !important;
+    line-height: 1.05 !important;
+  }
+  .meta .c{
+    font-size: 10.5px !important;
+    line-height: 1.05 !important;
+  }
+
+  /* (optional) slight top spacing tightening on mobile */
+  .section{ margin-top: 18px; }
+}
+
+
+/* ===== MOBILE swipe arrows ===== */
+@media (max-width: 720px){
+
+  .row{
+    position: relative;
+  }
+
+  .row::before,
+  .row::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 34px;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /* LEFT arrow */
+  .row::before{
+    left: 0;
+    background:
+      linear-gradient(90deg,
+        rgba(5,5,6,.95) 0%,
+        rgba(5,5,6,.65) 45%,
+        rgba(5,5,6,0) 100%);
+  }
+
+  /* RIGHT arrow */
+  .row::after{
+    right: 0;
+    background:
+      linear-gradient(270deg,
+        rgba(5,5,6,.95) 0%,
+        rgba(5,5,6,.65) 45%,
+        rgba(5,5,6,0) 100%);
+  }
+
+  /* Arrow icons */
+  .row::before,
+  .row::after{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: rgba(255,255,255,.6);
+    font-family: system-ui, sans-serif;
+  }
+
+  .row::before{ content: "‹"; }
+  .row::after{ content: "›"; }
+}
+
+@media (max-width: 720px){
+  .row.swiped::before,
+  .row.swiped::after{
+    opacity: .15;
+  }
+}
   </style>
 </head>
 
@@ -362,4 +482,88 @@
   document.getElementById("retail").innerHTML = DATA.retail.map(tileHTML).join("");
   document.getElementById("trends").innerHTML = DATA.trends.map(tileHTML).join("");
   document.getElementById("book").innerHTML  = DATA.book.map(tileHTML).join("");
+
+  // Mobile-only infinite loop for each horizontal .row
+  (function enableMobileLoopingRows(){
+    const mq = window.matchMedia("(max-width: 720px)");
+    if (!mq.matches) return;
+
+    const rows = document.querySelectorAll(".row");
+    rows.forEach((row) => {
+      // If already initialized, skip
+      if (row.dataset.loopInit === "1") return;
+      row.dataset.loopInit = "1";
+
+      // We only loop if there are children
+      const originalItems = Array.from(row.children);
+      if (originalItems.length < 2) return;
+
+      // Duplicate items once (so scrolling can wrap seamlessly)
+      originalItems.forEach(node => row.appendChild(node.cloneNode(true)));
+
+      // After duplication, scroll to the start of the first set
+      // Use rAF to ensure layout measured correctly
+      requestAnimationFrame(() => {
+        row.scrollLeft = 0;
+      });
+
+      // Calculate half width (width of original set)
+      const getHalfWidth = () => {
+        let w = 0;
+        for (let i = 0; i < originalItems.length; i++){
+          const el = row.children[i];
+          w += el.getBoundingClientRect().width;
+          // include gap (approx) by using computed gap
+        }
+        const gap = parseFloat(getComputedStyle(row).gap || "0");
+        w += gap * (originalItems.length - 1);
+        return w;
+      };
+
+      let halfWidth = 0;
+      const recalc = () => { halfWidth = getHalfWidth(); };
+      recalc();
+
+      // Keep it stable on resize/orientation change
+      window.addEventListener("resize", () => {
+        if (!mq.matches) return;
+        recalc();
+      }, { passive:true });
+
+      // The loop: when you pass the end of the first set, jump back by halfWidth
+      row.addEventListener("scroll", () => {
+        if (!mq.matches) return;
+        if (!halfWidth) return;
+
+        // If we scroll beyond the duplicated midpoint, wrap back
+        if (row.scrollLeft >= halfWidth){
+          row.scrollLeft -= halfWidth;
+        }
+        // (rare) if user scrolls backwards beyond start, wrap forward
+        if (row.scrollLeft < 0){
+          row.scrollLeft += halfWidth;
+        }
+      }, { passive:true });
+    });
+  })();
+
+   // Fade swipe arrows after user interacts (mobile only)
+  (function fadeSwipeHints(){
+    const mq = window.matchMedia("(max-width: 720px)");
+    if (!mq.matches) return;
+
+    document.querySelectorAll(".row").forEach(row => {
+      let faded = false;
+
+      row.addEventListener("scroll", () => {
+        if (faded) return;
+        faded = true;
+
+        row.style.setProperty("--hintOpacity", "0");
+        row.style.transition = "opacity .4s ease";
+        row.style.opacity = "1";
+        row.classList.add("swiped");
+      }, { passive:true });
+    });
+  })();
 </script>
